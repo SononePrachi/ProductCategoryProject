@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+
+    <style>
+        #loginForm {
+            margin-top: 100px;
+            width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+
+        #loginForm h2 {
+            text-align: center;
+        }
+
+        #loginForm label {
+            display: block;
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        #loginForm input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+
+        #loginForm button {
+            margin-top: 15px;
+            width: 100%;
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        #loginForm p {
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="loginForm">
+    <h2>Sign In</h2>
+
+    <form th:action="@{/login}" method="post">
+
+        <label>User Name</label>
+        <input type="text" name="username" placeholder="Enter User Name Here" required>
+
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Enter Password Here" required>
+
+        <button type="submit">Sign In</button>
+    </form>
+
+    <p>
+        Not Registered?
+        <a th:href="@{/public/register}">Register</a>
+    </p>
+</div>
+
+</body>
+</html>

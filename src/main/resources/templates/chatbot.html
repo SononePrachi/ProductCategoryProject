@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<input type="text" id="msg">
+<button onclick="send()">Send</button>
+
+<div id="result"></div>
+
+<script>
+    function send() {
+     let msg=document.getElementById("msg").value;
+
+     fetch("/ai/chat",{
+       method:"POST",
+       headers:{'Content-Type':'text/plain'},
+       body:msg
+     })
+     .then(res=>res.text())
+     .then(data=>{
+       document.getElementById("result").innerHTML=data;
+     });
+    }
+</script>
+
+</body>
+</html>
