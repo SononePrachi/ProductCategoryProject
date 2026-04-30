@@ -19,7 +19,7 @@
     <br>
 
     <label>Category:</label>
-    <select th:field="*{category.categoryId}">
+    <select th:field="*{categoryId}">
         <option value="">--Select Category--</option>
         <option th:each="c : ${category}"
                 th:value="${c.categoryId}"

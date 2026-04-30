@@ -119,4 +119,27 @@ public class ProductService {
 
         return dto;
     }
+
+    //to count total Product
+    public long getTotalProducts()
+    {
+        return productDao.count();
+    }
+
+    //to get highest salary
+    public Double getHighestPrice() {
+        return productDao.getHighestPrice();
+    }
+
+    public long getMyTotalProducts(User user) {
+        return productDao.countByUser(user);
+    }
+
+    public long getMyTotalCategories(User user) {
+        return productDao.countDistinctCategoryByUser(user);
+    }
+
+    public Double getMyTotalValue(User user) {
+        return productDao.sumPriceByUser(user);
+    }
 }

@@ -39,6 +39,77 @@ th, td {
 
   <h2 style="text-align:center;">Admin Home Page</h2>
 
+  <div style="display:flex; justify-content:center; gap:20px; margin:20px;">
+
+      <!-- Total Products -->
+      <div style="
+        width:130px;
+        padding:15px;
+        background:gray;
+        color:white;
+        text-align:center;
+        border-radius:10px;
+        font-size:16px;
+        font-weight:bold;">
+
+          📊 Total Products <br>
+
+          <span th:text="${totalProducts}"></span>
+
+      </div>
+
+      <!-- Total Users -->
+      <div style="
+        width:130px;
+        padding:15px;
+        background:teal;
+        color:white;
+        text-align:center;
+        border-radius:10px;
+        font-size:16px;
+        font-weight:bold;">
+
+          👤 Total Users <br>
+
+          <span th:text="${totalUsers}"></span>
+
+      </div>
+
+      <div style="
+    width:130px;
+    padding:15px;
+    background:purple;
+    color:white;
+    text-align:center;
+    border-radius:10px;
+    font-size:16px;
+    font-weight:bold;">
+
+          📂 Total Categories <br>
+
+          <span th:text="${totalCategories}"></span>
+
+      </div>
+
+      <!-- Highest Price Product -->
+      <div style="
+    width:130px;
+    padding:15px;
+    background:orange;
+    color:white;
+    text-align:center;
+    border-radius:10px;
+    font-size:16px;
+    font-weight:bold;">
+
+          💰 Highest Price <br>
+
+          <span th:text="${highestPrice}"></span>
+
+      </div>
+
+  </div>
+
   <div style="text-align:center; margin-bottom:20px;">
      <button id="productBtn" onclick="showProducts()">Show Products</button>
       <button id="userBtn" onclick="showUsers()">Show Users</button>
@@ -58,13 +129,18 @@ th, td {
   <tr th:each="p:${list}">
     <td th:text="${p.productName}"></td>
     <td th:text="${p.productPrice}"></td>
-      <td th:text="${p.category.categoryName}"></td>
-      <td th:text="${p.user.username}"></td>
+      <td th:text="${p.categoryName}"></td>
+      <td th:text="${p.username}"></td>
     <td>
         <div style="display: flex; gap: 10px; justify-content: center;">
-      <a th:href="@{/product/showEditForm/{id}/{page}(id=${p.productId},page=${currentPage})}">
-        <button>Update</button>
-      </a>
+            <button type="button"
+                    th:onclick="showAdminUpdateForm([[${p.productId}]],
+             [[${p.productName}]],
+             [[${p.productPrice}]],
+             [[${p.categoryId}]],
+             [[${currentPage}]])">
+                Update
+            </button>
       <form th:action="@{/product/delete/{id}/{page}(id=${p.productId},page=${currentPage})}" method="post">
         <button type="submit">Delete</button>
       </form>
@@ -105,7 +181,42 @@ th, td {
   </table>
   </div>
 
+  <div id="adminUpdateForm"
+       style="display:none; width:300px; margin:auto; margin-top:20px;
+     border:1px solid gray; padding:20px; border-radius:10px;">
 
+      <h3 align="center">Update Product</h3>
+
+      <form id="adminForm" method="post">
+
+          <input type="hidden" name="productId" id="aId">
+
+          <label style="display:block; margin-top:10px;">Product Name</label>
+          <input type="text" name="productName" id="aName"
+                 style="width:100%; padding:8px;">
+
+          <label style="display:block; margin-top:10px;">Product Price</label>
+          <input type="number" name="productPrice" id="aPrice"
+                 style="width:100%; padding:8px;">
+
+          <label style="display:block; margin-top:10px;">Category</label>
+          <select name="category.categoryId" id="aCategory"
+                  style="width:100%; padding:8px;">
+
+              <option th:each="c:${categories}"
+                      th:value="${c.categoryId}"
+                      th:text="${c.categoryName}">
+              </option>
+
+          </select>
+
+          <button type="submit"
+                  style="width:100%; margin-top:15px; padding:8px;">
+              Update
+          </button>
+
+      </form>
+  </div>
 
 
   <div>
@@ -147,6 +258,23 @@ th, td {
           document.getElementById("productBtn").classList.add("active-btn");
           document.getElementById("userBtn").classList.remove("active-btn");
       }
+
+
+
+function showAdminUpdateForm(id,name,price,categoryId,page)
+{
+    document.getElementById("adminUpdateForm").style.display = "block";
+
+    document.getElementById("aId").value = id;
+    document.getElementById("aName").value = name;
+    document.getElementById("aPrice").value = price;
+    document.getElementById("aCategory").value = categoryId;
+
+    document.getElementById("adminForm").action =
+        "/product/update/" + id + "/" + page;
+}
+
+
 
       // default active button
       window.onload = function () {

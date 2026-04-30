@@ -20,6 +20,11 @@ public class CategoryService {
         categoryDao.save(c);
     }
 
+    //get category count
+    public long getCount() {
+        return categoryDao.count();
+    }
+
     // Get All Categories DTO
     public List<CategoryDto> fetchAll() {
 

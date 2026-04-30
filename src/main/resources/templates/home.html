@@ -32,126 +32,114 @@
     </style>
 
 </head>
+
 <body>
-<div style="display:flex; align-items:center; justify-content:center; gap:15px;">
 
 
-    <form th:action="@{/product/fetchByCategoryWise}"
+<div style="display:flex; align-items:center; justify-content:center; gap:15px; margin-top:20px;">
 
-          method="get">
-    <label>
-     Category:
-    </label>
-    <select name="categoryId">
-        <option value="">--Select Category--</option>
-        <option th:each="c : ${categories}"
-                th:value="${c.categoryId}"
-                th:text="${c.categoryName}">
-        </option>
-    </select>
+    <!-- Search By Category -->
+    <form th:action="@{/product/fetchByCategoryWise}" method="get">
+
+        <label>Category:</label>
+
+        <select name="categoryId">
+            <option value="">--Select Category--</option>
+
+            <option th:each="c : ${categories}"
+                    th:value="${c.categoryId}"
+                    th:text="${c.categoryName}">
+            </option>
+
+        </select>
+
         <button type="submit">Search</button>
-
     </form>
 
-    <br>
+
+
+
+    <!-- Search By Product Name -->
     <form th:action="@{/product/fetchByProductName}" method="get">
 
         <label>Product:</label>
 
-        <input type="text" name="productName" placeholder="Enter product name">
+        <input type="text"
+               name="productName"
+               placeholder="Enter product name">
 
         <button type="submit">Search</button>
 
     </form>
 
+
+
 </div>
 
+<div style="text-align:right; margin:10px;">
+    <a th:href="@{/wish/my}" class="btn btn-primary btn-sm">
+        ❤️ My Wishlist
+    </a>
 
-<br><br>
+    <a th:href="@{/cart/my}" class="btn btn-primary btn-sm">
+        🛒 My Cart
+    </a>
 
+    <a th:href="@{/logout}" class="btn btn-dark btn-sm">
+        🚪 Logout
+    </a>
+</div>
 
-<div id="showProductList" th:if="${(isFiltered == null or !isFiltered) and (isFilteredByProductName == null or !isFilteredByProductName)}">
+<div id="showProductList">
     <h2 align="center">Product List</h2>
-<table class="table table-bordered">
-    <tr>
-        <th>Product Name</th>
-        <th>Product Price</th>
-        <th>Category Name</th>
-
-    </tr>
-
-    <tr th:each="p:${products}">
-        <td th:text="${p.productName}"></td>
-        <td th:text="${p.productPrice}"></td>
-        <td th:text="${p.category.categoryName}"></td>
-    </tr>
-</table>
-</div>
-
-
-
-<!--to See categoryWise-->
-<div th:if="${isFiltered}">
-    <h2 align="center">Filtered Products</h2>
 
     <table class="table table-bordered">
         <tr>
             <th>Product Name</th>
             <th>Product Price</th>
             <th>Category Name</th>
-
+            <th>Action</th>
         </tr>
 
-        <tr th:each="p:${products}">
+        <tr th:each="p : ${products}">
             <td th:text="${p.productName}"></td>
             <td th:text="${p.productPrice}"></td>
-            <td th:text="${p.category.categoryName}"></td>
+            <td th:text="${p.categoryName}"></td>
+
+            <td>
+                <a th:href="@{/wish/add/{id}(id=${p.productId})}"
+                   class="btn btn-danger btn-sm">
+                    ❤️ Wishlist
+                </a>
+
+                <a th:href="@{/cart/add/{id}(id=${p.productId})}"
+                   class="btn btn-primary btn-sm">
+                    🛒 Cart
+                </a>
+
+
+            </td>
+
+
         </tr>
 
     </table>
 
-    <!-- Back Button -->
-    <div style="text-align:center; margin-top:20px;">
-        <a th:href="@{/product/showMyProduct/0}">
-            <button>Back to All Products</button>
-        </a>
-    </div>
 
 </div>
 
 
-
-<div th:if="${isFilteredByProductName}">
-    <h2 align="center">Product Details</h2>
-    <table border="1">
-        <tr>
-            <th>Product Name</th>
-            <th>Product Price</th>
-            <th>Category Name</th>
-        </tr>
-
-
-        <tr>
-            <td th:text="${product.productName}"></td>
-            <td th:text="${product.productPrice}"></td>
-            <td th:text="${product.category.categoryName}"></td>
-        </tr>
-    </table>
-
-
-    <!-- Back Button -->
-    <div style="text-align:center; margin-top:20px;">
-        <a th:href="@{/product/getHomePage/0}">
-            <button>Back to All Products</button>
-        </a>
-    </div>
-
+<div style="text-align:center; margin-top:20px;">
+    <a th:href="@{/product/getHomePage/0}">
+        <button>Back to All Products</button>
+    </a>
 </div>
 
 
+<br><br>
 <!-- Pagination -->
 <div>
-    <nav th:if="${isFilteredByProductName == null or !isFilteredByProductName}">
+    <nav>
         <ul class="pagination">
             <li th:if="${currentPage !=0}" class="page-item"><a th:href="@{'/product/getHomePage/'+${currentPage-1}}"class="page-link" href="#">Previous</a></li>
 

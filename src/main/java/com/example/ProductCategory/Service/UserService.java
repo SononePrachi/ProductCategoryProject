@@ -63,6 +63,11 @@ public class UserService {
         return dto;
     }
 
+    //get total count of user
+    public long getCount() {
+        return userDao.count();
+    }
+
     // Get User By Id DTO
     public UserDto getUserById(Integer id) {
 

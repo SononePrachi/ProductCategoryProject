@@ -1,9 +1,12 @@
 package com.example.ProductCategory.Controller;
 
+import com.example.ProductCategory.DTO.CategoryDto;
 import com.example.ProductCategory.DTO.ProductDto;
 import com.example.ProductCategory.DTO.UserDto;
+import com.example.ProductCategory.Entity.Category;
 import com.example.ProductCategory.Entity.Product;
 import com.example.ProductCategory.Entity.User;
+import com.example.ProductCategory.Service.CategoryService;
 import com.example.ProductCategory.Service.ProductService;
 import com.example.ProductCategory.Service.UserService;
 import net.bytebuddy.implementation.bind.MethodDelegationBinder;
@@ -30,6 +33,9 @@ public class AdminController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private CategoryService categoryService;
+
 
 
     //GetAllProducts
@@ -40,7 +46,16 @@ public class AdminController {
         //offset=pageNumber*pageSize;
         Page<ProductDto> products=productService.fetchAllProduct(pageable);
         List<UserDto> users=userService.getAll();
+
+        List<CategoryDto> categories = categoryService.fetchAll();
+        long totalProducts = productService.getTotalProducts();
+
+        m.addAttribute("totalUsers", userService.getCount());
+        m.addAttribute("totalProducts", totalProducts);
+        m.addAttribute("totalCategories", categoryService.getCount());
+        m.addAttribute("highestPrice", productService.getHighestPrice());
         m.addAttribute("users",users);
+        m.addAttribute("categories", categories);
         m.addAttribute("list", products.getContent());  // actual data
         m.addAttribute("currentPage", page);
         m.addAttribute("totalPages", products.getTotalPages());

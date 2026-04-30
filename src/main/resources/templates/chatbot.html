@@ -1,26 +1,43 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <title>AI Chatbot</title>
+</head>
 <body>
 
-<input type="text" id="msg">
+<h2>Ask AI Chatbot</h2>
+
+<input type="text" id="msg" placeholder="Type message">
 <button onclick="send()">Send</button>
+
+<br><br>
 
 <div id="result"></div>
 
 <script>
-    function send() {
-     let msg=document.getElementById("msg").value;
 
-     fetch("/ai/chat",{
-       method:"POST",
-       headers:{'Content-Type':'text/plain'},
-       body:msg
-     })
-     .then(res=>res.text())
-     .then(data=>{
-       document.getElementById("result").innerHTML=data;
-     });
+    function send()
+    {
+       let msg = document.getElementById("msg").value;
+
+       fetch("/ai/chat",{
+          method:"POST",
+          headers:{
+             "Content-Type":"text/plain"
+          },
+          body:msg
+       })
+       .then(response => response.text())
+       .then(data => {
+
+          document.getElementById("result").innerHTML +=
+          "<p><b>You:</b> " + msg + "</p>" +
+          "<p><b>AI:</b> " + data + "</p><hr>";
+
+          document.getElementById("msg").value="";
+       });
     }
+
 </script>
 
 </body>

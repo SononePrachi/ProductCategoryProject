@@ -140,8 +140,9 @@ public class ProductController {
             products = productService.fetchAllProduct(
                     PageRequest.of(page, 5));
         }
+        m.addAttribute("isFiltered", true);
 
-        m.addAttribute("productList", products.getContent());
+        m.addAttribute("products", products.getContent());
         m.addAttribute("currentPage", page);
         m.addAttribute("totalPages", products.getTotalPages());
         m.addAttribute("categoryId", categoryId);
@@ -167,7 +168,9 @@ public class ProductController {
 
         ProductDto p = productService.findByName(productName);
 
-        m.addAttribute("productList", p);
+
+        m.addAttribute("products", java.util.List.of(p));
+
 
         if (role.equals("ROLE_SELLER")) {
             return "SellerProducts";
@@ -277,12 +280,20 @@ public class ProductController {
             m.addAttribute("categories",
                     categoryService.fetchAll());
 
-            m.addAttribute("productList",
+            m.addAttribute("products",
                     productPage.getContent());
 
             m.addAttribute("currentPage", page);
             m.addAttribute("totalPages",
                     productPage.getTotalPages());
+            m.addAttribute("myTotalProducts",
+                    productService.getMyTotalProducts(user));
+
+            m.addAttribute("myCategories",
+                    productService.getMyTotalCategories(user));
+
+            m.addAttribute("myTotalValue",
+                    productService.getMyTotalValue(user));
 
             return "SellerProducts";
         }
