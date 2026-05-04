@@ -29,6 +29,14 @@ public class OrderController {
         User user =
                 userService.getUserEntityByUsername(username);
 
+        // Check cart is empty or not
+        if (cartService.getByUser(user).isEmpty()) {
+
+            ra.addFlashAttribute("msg",
+                    "❌ Nothing to order");
+
+            return "redirect:/cart/my";
+        }
         cartService.clearCart(user);
 
         ra.addFlashAttribute("msg",

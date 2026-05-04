@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -28,13 +29,15 @@ public class PublicController {
         return "registrationPage";
     }
 
-    //Create
     @PostMapping("/createUser")
-    public String createUser(User u,Model m)
+    public String createUser(User u, RedirectAttributes ra)
     {
         userService.saveUser(u);
-        m.addAttribute("msg","User Created Successfully");
-        return "success";
+
+        ra.addFlashAttribute("msg",
+                "User Created Successfully");
+
+        return "redirect:/public/Login";
     }
 
     @GetMapping("/Login")

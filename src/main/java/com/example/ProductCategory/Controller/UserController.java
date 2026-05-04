@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -51,14 +52,14 @@ public class UserController {
 
     // Update User
     @PostMapping("/updateUser")
-    public String updateUser(@ModelAttribute User u, Model m) {
+    public String updateUser(@ModelAttribute User u, Model m,RedirectAttributes ra) {
 
         UserDto dto = userService.getUserById(u.getUid());
 
         User u1 = new User();
         u1.setUid(dto.getUid());
         u1.setUsername(u.getUsername());
-        u1.setRole(dto.getRole());
+        u1.setRole(u.getRole());
 
         if (u.getPassword() == null || u.getPassword().isEmpty()) {
             User oldUser = userService.getUserEntityById(u.getUid());
@@ -69,18 +70,18 @@ public class UserController {
 
         userService.saveUser(u1);
 
-        m.addAttribute("msg", "User Updated Successfully");
+        ra.addFlashAttribute("msg", "User Updated Successfully");
 
-        return "success";
+        return "redirect:/admin/getAllProducts/0";
     }
 
     // Delete User
     @PostMapping("/delete/{uid}")
-    public String deleteUser(@PathVariable Integer uid) {
+    public String deleteUser(@PathVariable Integer uid , RedirectAttributes ra) {
 
         productService.deleteByUserUid(uid);
         userService.deleteUser(uid);
-
+        ra.addFlashAttribute("msg", "User deleted successfully");
         return "redirect:/admin/getAllProducts/0";
     }
 

@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -155,6 +156,7 @@ public class ProductController {
         }
     }
 
+
     // Search By Product Name
     @GetMapping("/fetchByProductName")
     public String fetchByName(@RequestParam String productName,
@@ -168,9 +170,12 @@ public class ProductController {
 
         ProductDto p = productService.findByName(productName);
 
-
         m.addAttribute("products", java.util.List.of(p));
 
+        // add required data
+        m.addAttribute("currentPage", 0);
+        m.addAttribute("totalPages", 1);
+        m.addAttribute("categories", categoryService.fetchAll());
 
         if (role.equals("ROLE_SELLER")) {
             return "SellerProducts";
@@ -198,7 +203,8 @@ public class ProductController {
     @PostMapping("/update/{id}/{page}")
     public String updateProduct(@PathVariable int id,
                                 @PathVariable int page,
-                                @ModelAttribute Product p) {
+                                @ModelAttribute Product p,
+                                RedirectAttributes ra) {
 
         Authentication auth =
                 SecurityContextHolder.getContext().getAuthentication();
@@ -213,6 +219,7 @@ public class ProductController {
         if (!oldProduct.getUser().getUid().equals(user.getUid())
                 && !user.getRole().contains("ADMIN")) {
 
+            ra.addFlashAttribute("error", "Unauthorized access");
             return "redirect:/product/getHomePage/0";
         }
 
@@ -222,8 +229,9 @@ public class ProductController {
                 categoryService.getCategoryEntityById(
                         p.getCategory().getCategoryId()));
 
-        productService.addProduct(oldProduct);
+        productService.updateProduct(oldProduct);
 
+        ra.addFlashAttribute("msg", "Product updated successfully");
         if (user.getRole().contains("ADMIN")) {
             return "redirect:/admin/getAllProducts/0";
         }
@@ -234,7 +242,7 @@ public class ProductController {
     // Delete Product
     @PostMapping("/delete/{id}/{page}")
     public String deleteProduct(@PathVariable int id,
-                                @PathVariable int page) {
+                                @PathVariable int page,RedirectAttributes ra) {
 
         Authentication auth =
                 SecurityContextHolder.getContext().getAuthentication();
@@ -253,6 +261,7 @@ public class ProductController {
         }
 
         productService.deleteById(id);
+        ra.addFlashAttribute("msg", "Product Deleted Successfully");
 
         if (user.getRole().contains("ADMIN")) {
             return "redirect:/admin/getAllProducts/0";

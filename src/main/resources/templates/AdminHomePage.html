@@ -35,7 +35,12 @@ th, td {
 
     </style>
 </head>
+
 <body>
+
+<div th:if="${msg}" class="alert alert-success text-center">
+    <p th:text="${msg}"></p>
+</div>
 
   <h2 style="text-align:center;">Admin Home Page</h2>
 
@@ -168,9 +173,12 @@ th, td {
           <td th:text="${#strings.listJoin(p.role, ', ')}"></td>
           <td>
               <div style="display: flex; gap: 10px; justify-content: center;">
-              <form th:action="@{/User/showUpdateUser/{uid}(uid=${p.uid})}" >
-                  <button type="submit">Update</button>
-              </form>
+              <button type="button"
+                      th:onclick="showForm([[${p.uid}]],
+                                         [[${p.username}]],
+                                         [[${#strings.listJoin(p.role, ', ')}]])">
+                  Update
+              </button>
               <form th:action="@{/User/delete/{uid}(uid=${p.uid})}" method="post">
                   <button type="submit">Delete</button>
               </form>
@@ -218,6 +226,41 @@ th, td {
       </form>
   </div>
 
+<div id="updateForm"
+     style="display:none; width:300px; margin:auto; margin-top:20px;
+     border:1px solid gray; padding:20px; border-radius:10px;">
+
+    <h3 align="center">Update User</h3>
+
+    <form action="/User/updateUser" method="post">
+
+        <input type="hidden" name="uid" id="uid">
+
+        <label style="display:block; margin-top:10px;">Username</label>
+        <input type="text"
+               name="username"
+               id="username"
+               style="width:100%; padding:8px;">
+
+        <label style="display:block; margin-top:10px;">Role</label>
+        <select name="role"
+                id="role"
+                style="width:100%; padding:8px;">
+
+            <option value="USER">USER</option>
+            <option value="SELLER">SELLER</option>
+            <option value="ADMIN">ADMIN</option>
+
+        </select>
+
+        <button type="submit"
+                style="width:100%; margin-top:15px; padding:8px;">
+            Update
+        </button>
+
+    </form>
+
+</div>
 
   <div>
     <nav aria-label="Page navigation example">
@@ -281,6 +324,16 @@ function showAdminUpdateForm(id,name,price,categoryId,page)
           document.getElementById("productBtn").classList.add("active-btn");
           document.getElementById("userSection").style.display = "none"; // ensure hidden
       };
+
+
+
+function showForm(id, name, role) {
+    document.getElementById("updateForm").style.display = "block";
+    document.getElementById("uid").value = id;
+    document.getElementById("username").value = name;
+    document.getElementById("role").value = role;
+}
+
 
   </script>
 </body>
